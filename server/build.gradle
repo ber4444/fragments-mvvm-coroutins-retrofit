@@ -1,0 +1,62 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+def keystoreFile = rootProject.file("keystore.properties") // this should contain API_KEY="blah" from home.openweathermap.org/api_keys
+def keystore = new Properties()
+keystore.load(new FileInputStream(keystoreFile))
+
+android {
+  testOptions {
+    unitTests.returnDefaultValues = true
+  }
+
+  compileSdkVersion 28
+  buildToolsVersion '28.0.3'
+
+
+  defaultConfig {
+    minSdkVersion 21
+    targetSdkVersion 28
+    versionCode 1
+    versionName "1.0"
+
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+  }
+  buildTypes.each {
+    it.buildConfigField 'String', 'API_KEY', keystore['API_KEY']
+  }
+}
+
+sourceSets {
+  androidTest {
+    java.srcDirs = java.srcDirs + ['src/test/java']
+  }
+}
+
+dependencies {
+  implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+  implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+  implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+  implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+  implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.3-SNAPSHOT'
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1"
+
+  // Unit testing
+  testImplementation 'junit:junit:4.12'
+  testImplementation 'androidx.test:runner:1.1.1'
+  testImplementation 'androidx.test:rules:1.1.1'
+  testImplementation 'androidx.test.ext:junit:1.1.0'
+  testImplementation 'androidx.test.ext:truth:1.1.0'
+  testImplementation 'com.google.truth:truth:0.42'
+  testImplementation 'androidx.test:core:1.1.0'
+  testImplementation "com.squareup.okhttp3:mockwebserver:$oktthpVersion"
+  implementation "com.squareup.okhttp3:mockwebserver:$oktthpVersion"
+}
