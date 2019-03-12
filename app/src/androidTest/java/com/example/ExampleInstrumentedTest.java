@@ -26,15 +26,16 @@ public class ExampleInstrumentedTest {
     @Test
     public void findSomeView(){
         onView(withId(R.id.action_search)).check(matches(isDisplayed()));
-        onView(withId(com.google.android.material.R.id.search_src_text)).perform(typeText("berkeley"));
+        onView(withId(com.google.android.material.R.id.search_src_text)).perform(typeText("blah"));
         onView(withId(com.google.android.material.R.id.search_src_text)).perform(pressImeActionButton());
         try { Thread.sleep(2000); } catch (Exception e) {}
-        onView(withId(R.id.recycler_main)).check(new RecyclerViewItemCountAssertion(40));
+        onView(withId(R.id.recycler_main)).check(new RecyclerViewItemCountAssertion(100));
         onView(withRecyclerView(R.id.recycler_main)
-            .atPositionOnView(0, R.id.title))
-            .check(matches(withText(containsString("Celsius"))));
+            .atPositionOnView(0, R.id.text_item))
+            .check(matches(withText(containsString("G08A8836.jpg"))));
 
-        //onView(withId(R.id.recycler_main)).perform(actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.recycler_main)).perform(actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.pic)).check(matches(isDisplayed()));
     }
 
     public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {

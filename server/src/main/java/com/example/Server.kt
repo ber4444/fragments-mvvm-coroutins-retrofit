@@ -12,17 +12,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import okhttp3.mockwebserver.MockWebServer
 
-class Server {
+class Server(useMock: Boolean = false) {
   private val apiService : ApiService
   private val mockWebServer = MockWebServer()
 
-  constructor (useMock: Boolean = false) {
+  init {
     if (useMock) {
       mockWebServer.start()
       enqueueResponse("http/SampleResult.json")
       apiService = buildRetrofit(mockWebServer.url("").url().toString()).create(ApiService::class.java)
     } else {
-      apiService = buildRetrofit("https://api.openweathermap.org/data/2.5/").create(ApiService::class.java)
+      apiService = buildRetrofit("https://api.flickr.com").create(ApiService::class.java)
     }
   }
 

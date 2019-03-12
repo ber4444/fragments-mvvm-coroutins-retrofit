@@ -14,19 +14,23 @@ import kotlinx.android.synthetic.main.taskbar.*
 class MainActivity : AppCompatActivity() {
   private var toolBarNavigationListenerIsRegistered = false
   private var searchView: SearchView? = null
-  private var query: String? = null
-  fun query() = query
+  var query: String? = null
+  var maxPages: Int = 0
   companion object {
     private const val QUERY = "QUERY"
+    private const val MAX_PAGES = "MAX_PAGES"
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    if (savedInstanceState != null) query = savedInstanceState.getString(QUERY)
+    if (savedInstanceState != null) {
+      query = savedInstanceState.getString(QUERY)
+      maxPages = savedInstanceState.getInt(MAX_PAGES)
+    }
 
     setContentView(R.layout.activity_main)
     setSupportActionBar(toolbar)
-    getSupportActionBar()!!.setDisplayShowTitleEnabled(false)
+    supportActionBar!!.setDisplayShowTitleEnabled(false)
 
     val fragment: Fragment
     var tmp: Fragment? = null
@@ -64,6 +68,7 @@ class MainActivity : AppCompatActivity() {
     super.onSaveInstanceState(outState)
     if (searchView != null) {
       outState.putString(QUERY, searchView!!.query.toString())
+      outState.putInt(MAX_PAGES, maxPages)
     }
   }
 

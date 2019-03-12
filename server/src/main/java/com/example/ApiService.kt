@@ -6,10 +6,12 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ApiService {
-  @GET("forecast")
+  @GET("services/rest/")
   fun getSearchResults(@Query("page") page: Int,
-                       @Query("q") text: String,
-                       @Query("appid") key: String = BuildConfig.API_KEY,
-                       @Query("lang") lang: String = "hu",
-                       @Query("units") units: String = "metric"): Deferred<SearchResults>
+                       @Query("text") text: String,
+                       @Query("api_key") key: String = BuildConfig.API_KEY,
+                       @Query("format") format: String = "json",
+                       @Query("per_page") perPage: Int = 26,
+                       @Query("nojsoncallback") cb: Int = 1,
+                       @Query("method") method: String = "flickr.photos.search"): Deferred<SearchResults>
 }

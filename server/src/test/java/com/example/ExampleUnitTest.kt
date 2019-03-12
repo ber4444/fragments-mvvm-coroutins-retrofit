@@ -13,10 +13,10 @@ class ExampleUnitTest {
   fun testServer() {
     var res : Deferred<SearchResults>
     runBlocking {
-      res = Server(true).getItemsAsync(1, "524901")
-      val list = res.await().list
-      assertNotNull(list)
-      assertEquals(list!!.size, 40)
+      res = Server(true).getItemsAsync(1, "blah")
+      val result = res.await().photos
+      assertNotNull(result)
+      assertEquals(result!!.photo.size, result.perpage)
     }
   }
 }

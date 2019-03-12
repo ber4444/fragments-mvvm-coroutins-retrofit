@@ -6,14 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pojo.X
+import com.example.pojo.Photo
 import kotlinx.android.synthetic.main.item.view.*
-import java.text.SimpleDateFormat
-import java.util.*
 
 class MainAdapter : RecyclerView.Adapter<ViewHolder>() {
 
-  private val items = mutableListOf<X>()
+  private val items = mutableListOf<Photo>()
   var listener: RecyclerViewClickListener? = null
 
   override fun getItemCount() = items.size
@@ -21,10 +19,17 @@ class MainAdapter : RecyclerView.Adapter<ViewHolder>() {
   fun clear() = items.clear()
   fun isEmpty() = items.isEmpty()
 
-  fun addAll(list: List<X>) {
-    items.clear()
+  fun addAll(list: List<Photo>, clear: Boolean) {
+    if (clear) {
+      items.clear()
+      items.addAll(list)
+      notifyDataSetChanged()
+      return
+    }
+    val initialSize = items.size
     items.addAll(list)
-    notifyDataSetChanged()
+    val updatedSize = items.size
+    notifyItemRangeInserted(initialSize,updatedSize)
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -33,19 +38,19 @@ class MainAdapter : RecyclerView.Adapter<ViewHolder>() {
 
   @SuppressLint("SetTextI18n")
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-    val celsius = items.get(position).main.temp
-    val descr = items.get(position).weather[0].description
-    holder.title.text = "$celsius Celsius, $descr"
-    holder.time.text = items.get(position).dt_txt.toDate().formatTo("MM-dd-yyyy HH:mm")
-    val image = items.get(position).weather[0].icon
-    GlideApp.with(holder.context).load("http://openweathermap.org/img/w/$image.png").into(holder.image)
+    holder.title.text = items.get(position).title
+    GlideApp.with(holder.context).load(getUrl(position)).into(holder.image)
+  }
+
+  fun getUrl(index: Int): String {
+    val pic = items.get(index)
+    return "https://farm${pic.farm}.staticflickr.com/${pic.server}/${pic.id}_${pic.secret}_m.jpg"
   }
 }
 
 class ViewHolder (view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
-  val title = view.title
-  val time = view.time
-  val image = view.image
+  val title = view.text_item
+  val image = view.image_item
   val context: Context = view.context
 
   private var listener: RecyclerViewClickListener? = null
@@ -64,18 +69,4 @@ class ViewHolder (view: View) : RecyclerView.ViewHolder(view), View.OnClickListe
 
 interface RecyclerViewClickListener {
   fun onClick(view: View, position: Int)
-}
-
-// utils:
-
-fun String.toDate(dateFormat: String = "yyyy-MM-dd HH:mm:ss", timeZone: TimeZone = TimeZone.getTimeZone("UTC")): Date {
-  val parser = SimpleDateFormat(dateFormat, Locale.getDefault())
-  parser.timeZone = timeZone
-  return parser.parse(this)
-}
-
-fun Date.formatTo(dateFormat: String, timeZone: TimeZone = TimeZone.getDefault()): String {
-  val formatter = SimpleDateFormat(dateFormat, Locale.getDefault())
-  formatter.timeZone = timeZone
-  return formatter.format(this)
 }
