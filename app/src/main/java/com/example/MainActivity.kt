@@ -15,17 +15,17 @@ class MainActivity : AppCompatActivity() {
   private var toolBarNavigationListenerIsRegistered = false
   private var searchView: SearchView? = null
   var query: String? = null
-  var maxPics: Int = 0
+  var maxPages: Int = 0
   companion object {
     private const val QUERY = "QUERY"
-    private const val MAX_PICS = "MAX_PICS"
+    private const val MAX_PAGES = "MAX_PAGES"
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     if (savedInstanceState != null) {
       query = savedInstanceState.getString(QUERY)
-      maxPics = savedInstanceState.getInt(MAX_PICS)
+      maxPages = savedInstanceState.getInt(MAX_PAGES)
     }
 
     setContentView(R.layout.activity_main)
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
     super.onSaveInstanceState(outState)
     if (searchView != null) {
       outState.putString(QUERY, searchView!!.query.toString())
-      outState.putInt(MAX_PICS, maxPics)
+      outState.putInt(MAX_PAGES, maxPages)
     }
   }
 

@@ -40,7 +40,7 @@ class MainFragment : Fragment() {
 
     recycler_main.addOnScrollListener(object : EndlessRecyclerViewScrollListener(layoutManager) {
       override fun onLoadMore(page: Int, totalItemsCount: Int) {
-        val max = (activity as MainActivity).maxPics / 26F //  26 comes from ApiService - items per page
+        val max = (activity as MainActivity).maxPages
         if (page+1 > max) return
         getItems(page+1, (activity as MainActivity).query, false)
       }
@@ -66,7 +66,7 @@ class MainFragment : Fragment() {
         if (it.photos == null) adapter.addAll(emptyList(), clear, recycler_main)
         else {
           val list = it.photos!!.photo
-          (activity as MainActivity).maxPics = it.photos!!.pages
+          (activity as MainActivity).maxPages = it.photos!!.pages
           adapter.addAll(list, clear, recycler_main)
         }
       }
