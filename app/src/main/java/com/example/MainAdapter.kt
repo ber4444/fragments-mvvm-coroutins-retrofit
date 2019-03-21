@@ -19,7 +19,7 @@ class MainAdapter : RecyclerView.Adapter<ViewHolder>() {
   fun clear() = items.clear()
   fun isEmpty() = items.isEmpty()
 
-  fun addAll(list: List<Photo>, clear: Boolean) {
+  fun addAll(list: List<Photo>, clear: Boolean, listView: RecyclerView) {
     if (clear) {
       items.clear()
       items.addAll(list)
@@ -29,7 +29,9 @@ class MainAdapter : RecyclerView.Adapter<ViewHolder>() {
     val initialSize = items.size
     items.addAll(list)
     val updatedSize = items.size
-    notifyItemRangeInserted(initialSize,updatedSize)
+    listView.post {
+      notifyItemRangeInserted(initialSize,updatedSize)
+    }
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

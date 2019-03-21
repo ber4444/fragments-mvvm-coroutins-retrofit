@@ -40,7 +40,8 @@ class MainFragment : Fragment() {
 
     recycler_main.addOnScrollListener(object : EndlessRecyclerViewScrollListener(layoutManager) {
       override fun onLoadMore(page: Int, totalItemsCount: Int) {
-        if (page+1 > (activity as MainActivity).maxPages) return
+        val max = (activity as MainActivity).maxPics / 26F //  26 comes from ApiService - items per page
+        if (page+1 > max) return
         getItems(page+1, (activity as MainActivity).query, false)
       }
     })
@@ -62,11 +63,11 @@ class MainFragment : Fragment() {
     viewModel.readonly().observe(viewLifecycleOwner, Observer { // don't pass 'this' here to avoid https://github.com/googlesamples/android-architecture-components/issues/47
       if (it!!.stat == "fail") Toast.makeText(activity!!, it.message, Toast.LENGTH_SHORT).show()
       else {
-        if (it.photos == null) adapter.addAll(emptyList(), clear)
+        if (it.photos == null) adapter.addAll(emptyList(), clear, recycler_main)
         else {
           val list = it.photos!!.photo
-          (activity as MainActivity).maxPages = it.photos!!.pages
-          adapter.addAll(list, clear)
+          (activity as MainActivity).maxPics = it.photos!!.pages
+          adapter.addAll(list, clear, recycler_main)
         }
       }
     })

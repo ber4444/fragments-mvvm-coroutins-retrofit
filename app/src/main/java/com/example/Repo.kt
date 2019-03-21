@@ -14,7 +14,7 @@ object Repo {
       val result = Server().getItemsAsync(page, query).await()
       liveData.postValue(result)
     } catch (e: Throwable) {
-      liveData.postValue(SearchResults(null, "fail", if (e.message!=null) e.message!! else "error")) // FIXME: UGLY
+      liveData.postValue(SearchResults(null, "fail", if (e.message!=null) e.message!! else "error"))
     }
   }
 }
